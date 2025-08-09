@@ -1,0 +1,23 @@
+{
+  "policies": {
+    "DisableAppUpdate": true,
+    "DisableTelemetry": true,
+    "DontCheckDefaultBrowser": true,
+    "OverrideFirstRunPage": "https://orteil.dashnet.org/cookieclicker/",
+    "RequestedLocales": "fr-FR",
+    "Homepage": {
+      "URL": "https://orteil.dashnet.org/cookieclicker/",
+      "StartPage": "homepage"
+    },
+    "Extensions": {
+      "Install": [
+        "https://addons.mozilla.org/firefox/downloads/latest/ghostery/latest.xpi",
+        "https://addons.mozilla.org/firefox/downloads/file/4550988/francais_language_pack-141.0.20250806.102122.xpi"
+      ]
+    },
+    "ExtensionUpdate": true,
+    "SearchEngines" : {
+        "Default": "DuckDuckGo"
+    }
+  }
+}
