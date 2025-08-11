@@ -58,15 +58,14 @@ RUN apt-get update && \
 
 # Choix du bon fichier selon l'architecture
 ARG TARGETPLATFORM
-RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
-        mkdir -p /opt && \
-        curl -L https://github.com/gregoire78/autoclic/releases/download/v1.0.0/autoclic-app-1.0.0-arm64.tar.gz -s -o - | tar xz --transform='s/autoclic-app-1.0.0-arm64/autoclic-app/' -C /opt ; \
-        ln -sf /opt/autoclic-app/autoclic-app /usr/bin/autoclic-app ; \
+ARG AUTOCLIC_VERSION=2.0.0
+RUN mkdir -p /opt && \
+    if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+        curl -L https://github.com/gregoire78/autoclic/releases/download/v${AUTOCLIC_VERSION}/autoclic-app_${AUTOCLIC_VERSION}_linux_arm64.tar.gz -s -o - | tar xz --transform="s/autoclic-app_${AUTOCLIC_VERSION}_linux_arm64/autoclic-app/" -C /opt ; \
     elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
-        mkdir -p /opt && \
-        curl -L https://github.com/gregoire78/autoclic/releases/download/v1.0.0/autoclic-app-1.0.0-x64.tar.gz -s -o - | tar xz --transform='s/autoclic-app-1.0.0-x64/autoclic-app/' -C /opt ; \
-        ln -sf /opt/autoclic-app/autoclic-app /usr/bin/autoclic-app ; \
-    fi
+        curl -L https://github.com/gregoire78/autoclic/releases/download/v${AUTOCLIC_VERSION}/autoclic-app_${AUTOCLIC_VERSION}_linux_x64.tar.gz -s -o - | tar xz --transform="s/autoclic-app_${AUTOCLIC_VERSION}_linux_x64/autoclic-app/" -C /opt ; \
+    fi && \
+    ln -sf /opt/autoclic-app/autoclic-app /usr/bin/autoclic-app
 
 RUN mkdir -p /usr/lib/firefox/browser/defaults/preferences
 COPY firefox-branding.js /usr/lib/firefox/browser/defaults/preferences/firefox-branding.js
