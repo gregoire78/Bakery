@@ -3,6 +3,8 @@ FROM jlesage/baseimage-gui:ubuntu-24.04-v4.9.0
 ENV TZ=Europe/Paris
 ENV DISPLAY_WIDTH=1280
 ENV DISPLAY_HEIGHT=720
+ENV WEB_AUDIO=1
+ENV WEB_FILE_MANAGER=1
 ENV DISPLAY=:0
 ENV LANG=fr_FR.UTF-8
 ENV LANGUAGE=fr_FR:fr
@@ -17,6 +19,7 @@ RUN apt-get update && \
         ca-certificates \
         software-properties-common \
         locales \
+        libpulse0 \
         apt-utils && \
     locale-gen en_US.UTF-8 fr_FR.UTF-8 && \
     update-locale LANG=fr_FR.UTF-8 && \
