@@ -5,4 +5,5 @@ mkdir -p /config/xdg
 
 firefox --setDefaultBrowser --profile /config/profile &
 sleep 5
-autoclic-app --no-sandbox
+xclicker.AppImage --appimage-extract-and-run
+#autoclic-app --no-sandbox

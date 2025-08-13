@@ -70,6 +70,17 @@ RUN mkdir -p /opt && \
     fi && \
     ln -sf /opt/autoclic-app/autoclic-app /usr/bin/autoclic-app
 
+# xclicker (alt xdotool)
+ENV XDG_CONFIG_HOME=/config/xdg
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+        curl -s -L https://github.com/robiot/xclicker/releases/download/v1.5.1/xclicker_1.5.1_arm64.AppImage -o xclicker.AppImage ; \
+    elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+        curl -s -L https://github.com/robiot/xclicker/releases/download/v1.5.1/xclicker_1.5.1_amd64.AppImage -o xclicker.AppImage ; \
+    fi && \
+    chmod +x xclicker.AppImage && \
+    mv xclicker.AppImage /opt/xclicker.AppImage && \
+    ln -sf /opt/xclicker.AppImage /usr/bin/xclicker.AppImage
+
 RUN mkdir -p /usr/lib/firefox/browser/defaults/preferences
 COPY firefox-branding.js /usr/lib/firefox/browser/defaults/preferences/firefox-branding.js
 
