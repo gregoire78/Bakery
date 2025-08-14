@@ -1,0 +1,29 @@
+ARG BASEIMAGE=unknown
+FROM ${BASEIMAGE}
+
+# Installation des dépendances de autoclic-app
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        libasound2t64 \
+        libnotify4 \
+        libnss3 \
+        libxss1 \
+        libxtst6 \
+        xdg-utils \
+        libsecret-1-0 \
+        libgbm1 \
+        libappindicator3-1 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Autoclic-app installation
+ARG TARGETPLATFORM
+ARG AUTOCLIC_VERSION=2.0.0
+RUN mkdir -p /opt && \
+    if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+        curl -L https://github.com/gregoire78/autoclic/releases/download/v${AUTOCLIC_VERSION}/autoclic-app_${AUTOCLIC_VERSION}_linux_arm64.tar.gz -s -o - | tar xz --transform="s/autoclic-app_${AUTOCLIC_VERSION}_linux_arm64/autoclic-app/" -C /opt ; \
+    elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+        curl -L https://github.com/gregoire78/autoclic/releases/download/v${AUTOCLIC_VERSION}/autoclic-app_${AUTOCLIC_VERSION}_linux_x64.tar.gz -s -o - | tar xz --transform="s/autoclic-app_${AUTOCLIC_VERSION}_linux_x64/autoclic-app/" -C /opt ; \
+    fi && \
+    ln -sf /opt/autoclic-app/autoclic-app /usr/bin/autoclic-app
+
+RUN sed -i 's|__CLICKER_COMMAND__|autoclic-app --no-sandbox|' /startapp.sh

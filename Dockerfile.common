@@ -9,6 +9,7 @@ ENV DISPLAY=:0
 ENV LANG=fr_FR.UTF-8
 ENV LANGUAGE=fr_FR:fr
 ENV LC_ALL=fr_FR.UTF-8
+ENV XDG_CONFIG_HOME=/config/xdg
 
 # Mise à jour et installation des dépendances de base
 RUN apt-get update && \
@@ -44,42 +45,6 @@ RUN echo 'Package: *\nPin: origin packages.mozilla.org\nPin-Priority: 1000' \
 RUN apt-get update && \
     apt-get install -y --no-install-recommends firefox && \
     rm -rf /var/lib/apt/lists/*
-
-# Installation des dépendances de autoclic-app
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        libasound2t64 \
-        libnotify4 \
-        libnss3 \
-        libxss1 \
-        libxtst6 \
-        xdg-utils \
-        libsecret-1-0 \
-        libgbm1 \
-        libappindicator3-1 && \
-    rm -rf /var/lib/apt/lists/*
-
-# Choix du bon fichier selon l'architecture
-ARG TARGETPLATFORM
-ARG AUTOCLIC_VERSION=2.0.0
-RUN mkdir -p /opt && \
-    if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
-        curl -L https://github.com/gregoire78/autoclic/releases/download/v${AUTOCLIC_VERSION}/autoclic-app_${AUTOCLIC_VERSION}_linux_arm64.tar.gz -s -o - | tar xz --transform="s/autoclic-app_${AUTOCLIC_VERSION}_linux_arm64/autoclic-app/" -C /opt ; \
-    elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
-        curl -L https://github.com/gregoire78/autoclic/releases/download/v${AUTOCLIC_VERSION}/autoclic-app_${AUTOCLIC_VERSION}_linux_x64.tar.gz -s -o - | tar xz --transform="s/autoclic-app_${AUTOCLIC_VERSION}_linux_x64/autoclic-app/" -C /opt ; \
-    fi && \
-    ln -sf /opt/autoclic-app/autoclic-app /usr/bin/autoclic-app
-
-# xclicker (alt xdotool)
-ENV XDG_CONFIG_HOME=/config/xdg
-RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
-        curl -s -L https://github.com/robiot/xclicker/releases/download/v1.5.1/xclicker_1.5.1_arm64.AppImage -o xclicker.AppImage ; \
-    elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
-        curl -s -L https://github.com/robiot/xclicker/releases/download/v1.5.1/xclicker_1.5.1_amd64.AppImage -o xclicker.AppImage ; \
-    fi && \
-    chmod +x xclicker.AppImage && \
-    mv xclicker.AppImage /opt/xclicker.AppImage && \
-    ln -sf /opt/xclicker.AppImage /usr/bin/xclicker.AppImage
 
 RUN mkdir -p /usr/lib/firefox/browser/defaults/preferences
 COPY firefox-branding.js /usr/lib/firefox/browser/defaults/preferences/firefox-branding.js
