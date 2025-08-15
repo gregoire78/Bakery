@@ -12,7 +12,11 @@ RUN apt-get update && \
         xdg-utils \
         libsecret-1-0 \
         libgbm1 \
-        libappindicator3-1 && \
+        libappindicator3-1 \
+        fonts-noto-color-emoji \
+        fonts-takao-mincho \
+        fonts-noto \
+        fonts-roboto && \
     rm -rf /var/lib/apt/lists/*
 
 # Autoclic-app installation
